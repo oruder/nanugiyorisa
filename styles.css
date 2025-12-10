@@ -1,0 +1,816 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: url('assets/화면배경.jpg') center/cover no-repeat fixed;
+    min-height: 100vh;
+    padding: 20px;
+    color: #333;
+}
+
+.game-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    position: relative;
+}
+
+/* 주문서 영역 */
+.order-section {
+    background: transparent;
+    padding: 30px;
+    color: black;
+}
+
+.order-board {
+    background: url('assets/주문서.jpg') center/cover no-repeat;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    color: #333;
+}
+
+.order-board h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #000000;
+    font-weight: bold;
+}
+
+.order-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.dish-title h3 {
+    margin: 0 0 15px 0;
+    color: #000000;
+    font-size: 2em;
+    text-align: center;
+    padding: 10px;
+    border: 2px solid #000000;
+    border-radius: 12px;
+    background-color: transparent;
+    font-weight: bold;
+}
+
+.recipe-section {
+    background: transparent;
+    padding: 15px;
+    border-radius: 10px;
+    border: 2px dashed #000000;
+}
+
+.recipe-title {
+    font-weight: bold;
+    color: #000000;
+    font-size: 1.4em;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.order-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: transparent;
+    padding: 12px 20px;
+    border-radius: 10px;
+    border: 2px solid #000000;
+    font-size: 22px;
+    font-weight: 500;
+    box-shadow: none;
+    transition: all 0.2s ease;
+}
+
+.order-item:hover {
+    border-color: #000000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transform: translateX(5px);
+}
+
+.ingredient-icon {
+    font-size: 32px;
+    width: 45px;
+    height: 45px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border-radius: 8px;
+    padding: 5px;
+}
+
+.ingredient-icon img {
+    border-radius: 5px;
+}
+
+.ingredient-name {
+    color: #000000;
+    font-weight: 600;
+    min-width: 50px;
+    font-size: 22px;
+}
+
+.fraction-display {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 5px;
+    font-size: 24px;
+    line-height: 1;
+    color: #000000;
+}
+
+.numerator {
+    padding-bottom: 2px;
+    color: #000000;
+}
+
+.fraction-line {
+    width: 100%;
+    height: 3px;
+    background: #000000;
+    margin: 2px 0;
+}
+
+.denominator {
+    padding-top: 2px;
+    color: #000000;
+}
+
+.unit {
+    color: #000000;
+    font-size: 22px;
+}
+
+.level-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 22px;
+    font-weight: bold;
+    color: #000000;
+    padding-top: 15px;
+    border-top: 2px solid #000000;
+}
+
+/* 매출 표시 */
+.money-display {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 15px 25px;
+    border-radius: 12px;
+    font-size: 32px;
+    font-weight: bold;
+    color: #000000;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    border: 3px solid #000000;
+}
+
+/* 메인 게임 영역 */
+.game-area {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1fr;
+    gap: 20px;
+    padding: 30px;
+    min-height: 500px;
+}
+
+h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #667eea;
+    text-align: center;
+}
+
+/* 재료통 영역 */
+.ingredient-storage {
+    background: url('assets/냉장고.jpg') center/cover no-repeat;
+    padding: 20px;
+    border-radius: 15px;
+    border: 3px solid #e9ecef;
+}
+
+.storage-containers {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.storage-item {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 3px solid #dee2e6;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.storage-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    border-color: #667eea;
+}
+
+.storage-item:active {
+    transform: translateY(-2px);
+}
+
+.storage-icon {
+    font-size: 48px;
+    margin-bottom: 8px;
+}
+
+.storage-label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #495057;
+}
+
+/* 작업대 영역 */
+.workspace {
+    background: #fff8e1;
+    padding: 20px;
+    border-radius: 15px;
+    border: 3px solid #ffe082;
+    display: flex;
+    flex-direction: column;
+}
+
+.workspace-area {
+    flex: 1;
+    background: url('assets/도마.jpg') center/cover no-repeat;
+    border: 3px dashed #ffd54f;
+    border-radius: 10px;
+    padding: 20px;
+    min-height: 250px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-content: flex-start;
+    position: relative;
+}
+
+.workspace-placeholder {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #aaa;
+    font-size: 16px;
+    text-align: center;
+    pointer-events: none;
+}
+
+.workspace-area.has-items .workspace-placeholder {
+    display: none;
+}
+
+.ingredient-item {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    position: relative;
+    padding: 10px;
+}
+
+.ingredient-item:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.3));
+}
+
+.ingredient-item.selected {
+    filter: drop-shadow(0 0 8px rgba(245, 87, 108, 0.8));
+}
+
+.ingredient-item .item-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 5px;
+}
+
+.ingredient-item .item-label {
+    font-size: 12px;
+    color: #666;
+    font-weight: bold;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 3px 8px;
+    border-radius: 5px;
+}
+
+.ingredient-divided {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 2px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 2px dashed #667eea;
+    border-radius: 10px;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.piece {
+    background: #fff;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    position: relative;
+    padding: 5px;
+}
+
+.piece:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    border-color: #667eea;
+}
+
+.piece.selected {
+    border-color: #f5576c;
+    background: #fff5f5;
+    box-shadow: 0 0 0 3px rgba(245, 87, 108, 0.3);
+    transform: translateY(-5px);
+}
+
+.piece .piece-icon {
+    position: relative;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.piece .piece-icon img {
+    display: block;
+}
+
+.piece-label {
+    font-size: 11px;
+    color: #333;
+    font-weight: bold;
+    margin-top: 5px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2px 6px;
+    border-radius: 3px;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.2;
+}
+
+.piece-label .fraction-num {
+    border-bottom: 1px solid #333;
+    padding-bottom: 1px;
+}
+
+.piece-label .fraction-den {
+    padding-top: 1px;
+}
+
+.cut-line {
+    position: absolute;
+    background: #333;
+    z-index: 10;
+    animation: cutAnimation 0.5s ease;
+}
+
+@keyframes cutAnimation {
+    0% { 
+        height: 0;
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.7;
+    }
+}
+
+.workspace-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.plate-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.plate-base {
+    width: 200px;
+    height: 200px;
+    background: white;
+    border-radius: 50%;
+    border: 5px solid #81c784;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+}
+
+.plate-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
+    max-height: 100%;
+    overflow: visible;
+}
+
+.plate-piece {
+    font-size: 28px;
+    cursor: pointer;
+    transition: filter 0.2s ease;
+    animation: placeOnPlate 0.3s ease;
+    position: relative;
+}
+
+.plate-piece .piece-svg {
+    width: 35px;
+    height: 35px;
+}
+
+.plate-piece .piece-icon {
+    border: 2px solid transparent;
+    transition: border-color 0.2s ease;
+}
+
+.plate-piece:hover .piece-icon {
+    border-color: #667eea;
+}
+
+.plate-piece:hover {
+    filter: brightness(1.1) drop-shadow(0 2px 5px rgba(102, 126, 234, 0.5));
+}
+
+@keyframes placeOnPlate {
+    from {
+        transform: scale(0) rotate(180deg);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+@keyframes cooking {
+    0%, 100% {
+        transform: rotate(-10deg);
+    }
+    50% {
+        transform: rotate(10deg);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.plate-info {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.current-amount {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2e7d32;
+    background: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    display: inline-block;
+}
+
+.plate-controls {
+    display: flex;
+    gap: 10px;
+}
+
+/* 요리 결과 영역 */
+.dish-result {
+    margin-top: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 15px;
+    border: 3px solid #4caf50;
+    box-shadow: 0 5px 20px rgba(76, 175, 80, 0.3);
+}
+
+.dish-image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.dish-controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.dish-controls .btn {
+    flex: 0 1 auto;
+    min-width: 120px;
+}
+
+/* 버튼 스타일 */
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn:not(:disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.btn:not(:disabled):active {
+    transform: translateY(0);
+}
+
+.btn-divide {
+    background: #667eea;
+    color: white;
+}
+
+.btn-cook {
+    background: #ff9800;
+    color: white;
+}
+
+.btn-cook:hover:not(:disabled) {
+    background: #fb8c00;
+}
+
+.btn-serve {
+    background: #4caf50;
+    color: white;
+}
+
+.btn-serve:hover:not(:disabled) {
+    background: #43a047;
+}
+
+.btn-primary {
+    background: #667eea;
+    color: white;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-hint {
+    background: #ffd54f;
+    color: #333;
+    padding: 15px 30px;
+    font-size: 18px;
+}
+
+/* 힌트 섹션 */
+.hint-section {
+    padding: 20px;
+    text-align: center;
+}
+
+/* 모달 */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    animation: modalAppear 0.3s ease;
+}
+
+@keyframes modalAppear {
+    from {
+        transform: scale(0.7);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.modal-content h3 {
+    margin-bottom: 25px;
+    font-size: 24px;
+    color: #333;
+}
+
+.divide-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.divide-option {
+    padding: 20px;
+    border: 3px solid #667eea;
+    background: white;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #667eea;
+}
+
+.divide-option:hover {
+    background: #667eea;
+    color: white;
+    transform: scale(1.05);
+}
+
+/* 결과 모달 */
+.result-modal {
+    max-width: 600px;
+}
+
+.result-content-success {
+    color: #2e7d32;
+}
+
+.result-content-success h2 {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.result-content-success p {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.result-content-fail {
+    color: #d32f2f;
+}
+
+.result-content-fail h2 {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.result-content-fail p {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.result-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.star-animation {
+    font-size: 80px;
+    animation: starBurst 0.6s ease;
+}
+
+@keyframes starBurst {
+    0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2) rotate(180deg);
+    }
+    100% {
+        transform: scale(1) rotate(360deg);
+        opacity: 1;
+    }
+}
+
+/* 힌트 모달 */
+#hintContent {
+    text-align: left;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+#hintContent ol {
+    padding-left: 20px;
+}
+
+#hintContent li {
+    margin-bottom: 10px;
+}
+
+/* 반응형 */
+@media (max-width: 1024px) {
+    .game-area {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .storage-containers {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .order-section {
+        padding: 20px;
+    }
+    
+    .order-board {
+        padding: 15px;
+    }
+    
+    .order-board h2 {
+        font-size: 22px;
+    }
+    
+    .order-item {
+        font-size: 16px;
+        padding: 10px 15px;
+    }
+    
+    .ingredient-icon {
+        font-size: 24px;
+    }
+    
+    .storage-containers {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .divide-options {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

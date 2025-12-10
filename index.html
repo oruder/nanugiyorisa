@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나누기 요리사 - Division Chef</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- 매출 표시 -->
+        <div class="money-display" id="moneyDisplay">💰 0원</div>
+        
+        <!-- 주문서 영역 -->
+        <div class="order-section">
+            <div class="order-board">
+                <h2>주문서</h2>
+                <div class="order-content" id="orderContent">
+                    <div class="order-item">
+                        <span class="ingredient-icon">🐟</span>
+                        <span class="ingredient-name">생선</span>
+                        <div class="fraction-display">
+                            <span class="numerator">2</span>
+                            <span class="fraction-line"></span>
+                            <span class="denominator">4</span>
+                        </div>
+                        <span class="unit">마리</span>
+                    </div>
+                </div>
+                <div class="level-info">
+                    <span id="levelDisplay">레벨 1</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 메인 게임 영역 -->
+        <div class="game-area">
+            <!-- 재료통 영역 -->
+            <div class="ingredient-storage">
+                <h3>재료 창고</h3>
+                <div class="storage-containers">
+                    <div class="storage-item" data-ingredient="fish">
+                        <div class="storage-icon">
+                            <img src="assets/fish.jpg" alt="생선" style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                        <div class="storage-label">생선</div>
+                    </div>
+                    <div class="storage-item" data-ingredient="meat">
+                        <div class="storage-icon">
+                            <img src="assets/meat.jpg" alt="고기" style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                        <div class="storage-label">고기</div>
+                    </div>
+                    <div class="storage-item" data-ingredient="vegetable">
+                        <div class="storage-icon">
+                            <img src="assets/vegetable.jpg" alt="채소" style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                        <div class="storage-label">채소</div>
+                    </div>
+                    <div class="storage-item" data-ingredient="bread">
+                        <div class="storage-icon">
+                            <img src="assets/bread.jpg" alt="빵" style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                        <div class="storage-label">빵</div>
+                    </div>
+                    <div class="storage-item" data-ingredient="fruit">
+                        <div class="storage-icon">
+                            <img src="assets/fruit.jpg" alt="과일" style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                        <div class="storage-label">과일</div>
+                    </div>
+                    <div class="storage-item" data-ingredient="cheese">
+                        <div class="storage-icon">
+                            <img src="assets/cheese.jpg" alt="치즈" style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                        <div class="storage-label">치즈</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 작업대 영역 -->
+            <div class="workspace">
+                <h3>작업대</h3>
+                <div class="workspace-area" id="workspaceArea">
+                    <div class="workspace-placeholder">
+                        재료를 여기로 가져오세요
+                    </div>
+                </div>
+                <div class="workspace-controls">
+                    <button id="divideBtn" class="btn btn-divide" disabled>등분하기</button>
+                    <button id="moveWholeToPLateBtn" class="btn btn-primary" disabled>접시로 가져가기</button>
+                    <button id="clearWorkspaceBtn" class="btn btn-secondary">작업대 비우기</button>
+                </div>
+            </div>
+
+            <!-- 접시 영역 -->
+            <div class="plate-section">
+                <h3>접시</h3>
+                <div class="plate-area" id="plateArea">
+                    <div class="plate-base">
+                        <div class="plate-content" id="plateContent"></div>
+                    </div>
+                </div>
+                <div class="plate-info">
+                    <div class="current-amount" id="currentAmount">
+                        현재: 0
+                    </div>
+                </div>
+                <div class="plate-controls">
+                    <button id="cookBtn" class="btn btn-cook" disabled>요리하기</button>
+                    <button id="clearPlateBtn" class="btn btn-secondary">접시 비우기</button>
+                </div>
+                
+                <!-- 요리 결과 영역 -->
+                <div class="dish-result" id="dishResult" style="display: none;">
+                    <h4 style="text-align: center; color: #667eea; margin-bottom: 10px;">완성된 요리</h4>
+                    <div class="dish-image-container" id="dishImageContainer">
+                        <img id="dishImage" src="" alt="요리" style="width: 100%; max-width: 200px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+                        <div id="dishName" style="text-align: center; font-size: 1.2em; font-weight: bold; color: #495057; margin-top: 10px;"></div>
+                    </div>
+                    <div class="dish-controls" style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
+                        <button id="serveBtn" class="btn btn-serve">서빙하기</button>
+                        <button id="discardBtn" class="btn btn-secondary">버리기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 힌트 버튼 -->
+        <div class="hint-section">
+            <button id="hintBtn" class="btn btn-hint">💡 힌트</button>
+        </div>
+    </div>
+
+    <!-- 등분 입력 모달 -->
+    <div id="divideModal" class="modal">
+        <div class="modal-content">
+            <h3>몇 등분으로 나눌까요?</h3>
+            <div class="divide-options">
+                <button class="divide-option" data-parts="2">2등분</button>
+                <button class="divide-option" data-parts="3">3등분</button>
+                <button class="divide-option" data-parts="4">4등분</button>
+                <button class="divide-option" data-parts="6">6등분</button>
+                <button class="divide-option" data-parts="8">8등분</button>
+                <button class="divide-option" data-parts="12">12등분</button>
+            </div>
+            <button class="btn btn-secondary" id="cancelDivide">취소</button>
+        </div>
+    </div>
+
+    <!-- 결과 모달 -->
+    <div id="resultModal" class="modal">
+        <div class="modal-content result-modal">
+            <div id="resultContent"></div>
+            <div class="result-buttons">
+                <button id="nextBtn" class="btn btn-primary">다음 문제</button>
+                <button id="retryBtn" class="btn btn-secondary">다시 시도</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 힌트 모달 -->
+    <div id="hintModal" class="modal">
+        <div class="modal-content">
+            <h3>💡 힌트</h3>
+            <div id="hintContent"></div>
+            <button class="btn btn-primary" id="closeHint">확인</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

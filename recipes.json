@@ -1,0 +1,127 @@
+{
+  "recipes": [
+    {
+      "id": "fish_grilled",
+      "name": "생선구이",
+      "image": "assets/dish_fish_grilled.jpg",
+      "ingredients": [
+        { "ingredient": "fish", "amount": { "numerator": 1, "denominator": 2 } }
+      ]
+    },
+    {
+      "id": "meat_steak",
+      "name": "고기스테이크",
+      "image": "assets/dish_meat_steak.jpg",
+      "ingredients": [
+        { "ingredient": "meat", "amount": { "numerator": 1, "denominator": 4 } }
+      ]
+    },
+    {
+      "id": "vegetable_salad",
+      "name": "채소샐러드",
+      "image": "assets/dish_vegetable_salad.jpg",
+      "ingredients": [
+        { "ingredient": "vegetable", "amount": { "numerator": 2, "denominator": 4 } }
+      ]
+    },
+    {
+      "id": "bread_slice",
+      "name": "빵 한 조각",
+      "image": "assets/dish_bread_slice.jpg",
+      "ingredients": [
+        { "ingredient": "bread", "amount": { "numerator": 1, "denominator": 2 } }
+      ]
+    },
+    {
+      "id": "fish_steak",
+      "name": "생선스테이크",
+      "image": "assets/dish_fish_steak.jpg",
+      "ingredients": [
+        { "ingredient": "fish", "amount": { "numerator": 3, "denominator": 4 } }
+      ]
+    },
+    {
+      "id": "fruit_salad",
+      "name": "과일샐러드",
+      "image": "assets/dish_fruit_salad.jpg",
+      "ingredients": [
+        { "ingredient": "fruit", "amount": { "numerator": 1, "denominator": 3 } }
+      ]
+    },
+    {
+      "id": "cheese_toast",
+      "name": "치즈토스트",
+      "image": "assets/dish_cheese_toast.jpg",
+      "ingredients": [
+        { "ingredient": "cheese", "amount": { "numerator": 2, "denominator": 3 } }
+      ]
+    },
+    {
+      "id": "fish_porridge",
+      "name": "생선죽",
+      "image": "assets/dish_fish_porridge.jpg",
+      "ingredients": [
+        { "ingredient": "fish", "amount": { "numerator": 1, "denominator": 6 } }
+      ]
+    },
+    {
+      "id": "meat_rice",
+      "name": "고기덮밥",
+      "image": "assets/dish_meat_rice.jpg",
+      "ingredients": [
+        { "ingredient": "meat", "amount": { "numerator": 5, "denominator": 6 } }
+      ]
+    },
+    {
+      "id": "fish_vegetable_stirfry",
+      "name": "생선채소볶음",
+      "image": "assets/dish_fish_vegetable_stirfry.jpg",
+      "ingredients": [
+        { "ingredient": "vegetable", "amount": { "numerator": 1, "denominator": 3 } },
+        { "ingredient": "fish", "amount": { "numerator": 1, "denominator": 2 } }
+      ]
+    },
+    {
+      "id": "bread_pudding",
+      "name": "빵푸딩",
+      "image": "assets/dish_bread_pudding.jpg",
+      "ingredients": [
+        { "ingredient": "bread", "amount": { "numerator": 3, "denominator": 8 } }
+      ]
+    },
+    {
+      "id": "fruit_tart",
+      "name": "과일타르트",
+      "image": "assets/dish_fruit_tart.jpg",
+      "ingredients": [
+        { "ingredient": "fruit", "amount": { "numerator": 5, "denominator": 8 } }
+      ]
+    },
+    {
+      "id": "cheese_gratin",
+      "name": "치즈그라탕",
+      "image": "assets/dish_cheese_gratin.jpg",
+      "ingredients": [
+        { "ingredient": "cheese", "amount": { "numerator": 7, "denominator": 12 } }
+      ]
+    },
+    {
+      "id": "fish_vegetable_grill",
+      "name": "생선채소구이",
+      "image": "assets/dish_fish_vegetable_grill.jpg",
+      "ingredients": [
+        { "ingredient": "fish", "amount": { "numerator": 2, "denominator": 6 } },
+        { "ingredient": "vegetable", "amount": { "numerator": 3, "denominator": 4 } }
+      ]
+    },
+    {
+      "id": "meat_sandwich",
+      "name": "고기샌드위치",
+      "image": "assets/dish_meat_sandwich.jpg",
+      "ingredients": [
+        { "ingredient": "meat", "amount": { "numerator": 5, "denominator": 12 } },
+        { "ingredient": "bread", "amount": { "numerator": 1, "denominator": 4 } }
+      ]
+    }
+  ]
+}

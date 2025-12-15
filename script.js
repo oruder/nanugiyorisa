@@ -1162,6 +1162,7 @@ function initEventListeners() {
     // 초기화 버튼
     document.getElementById('resetButton').addEventListener('click', function() {
         if (confirm('돈을 초기화하시겠습니까? 모든 매출이 사라집니다.')) {
+            isExplicitReset = true;
             gameState.money = 0;
             saveMoney();
             updateMoneyDisplay();
@@ -1173,6 +1174,7 @@ function initEventListeners() {
         if (gameState.currentProblem >= gameState.problemOrder.length - 1) {
             // 게임 재시작 - 금액 초기화 확인
             if (confirm('모든 문제를 완료했습니다! 처음부터 다시 시작하면 현재 매출이 0원으로 초기화됩니다. 계속하시겠습니까?')) {
+                isExplicitReset = true;
                 gameState.currentProblem = 0;
                 gameState.currentLevel = 1;
                 gameState.money = 0;
@@ -1304,6 +1306,7 @@ function loadUserData() {
             console.log('사용자 데이터 불러오기:', currentUser, gameState.money);
         } else {
             // 새 사용자
+            isNewUser = true;
             gameState.money = 0;
             saveUserData();
             console.log('새 사용자 생성:', currentUser);
@@ -1319,6 +1322,9 @@ function loadUserData() {
 }
 
 // Firestore에 사용자 데이터 저장
+var isNewUser = false;  // 새 사용자 플래그
+var isExplicitReset = false;  // 명시적 초기화 플래그
+
 function saveUserData() {
     var db = window.firebaseDB;
     var funcs = window.firestoreFunctions;
@@ -1326,11 +1332,16 @@ function saveUserData() {
     if (!db || !funcs || !currentUser) return;
     
     // 0원으로 저장하려고 하면 한번 더 확인
-    if (gameState.money === 0) {
-        console.warn('경고: 0원으로 저장 시도');
-        // 이미 0원이었다면 그냥 저장
-        // 새 사용자이거나 명시적 초기화를 한 경우만 통과
+    if (gameState.money === 0 && !isNewUser && !isExplicitReset) {
+        if (!confirm('⚠️ 경고: 금액이 0원입니다. 정말로 0원으로 저장하시겠습니까?')) {
+            console.log('0원 저장 취소됨');
+            return;  // 저장 취소
+        }
     }
+    
+    // 플래그 초기화
+    isNewUser = false;
+    isExplicitReset = false;
     
     var userRef = funcs.doc(db, 'users', currentUser);
     var timestamp = new Date().toISOString();

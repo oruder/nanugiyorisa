@@ -1088,7 +1088,19 @@ function showHint() {
 }
 
 // 이벤트 리스너 설정
+// 이벤트 리스너 중복 방지 플래그
+var eventListenersInitialized = false;
+
 function initEventListeners() {
+    // 이미 초기화되었으면 종료
+    if (eventListenersInitialized) {
+        console.log('이벤트 리스너가 이미 초기화되었습니다');
+        return;
+    }
+    
+    console.log('이벤트 리스너 초기화 중...');
+    eventListenersInitialized = true;
+    
     // 재료통 클릭
     var storageItems = document.querySelectorAll('.storage-item');
     for (var i = 0; i < storageItems.length; i++) {
@@ -1347,5 +1359,3 @@ function logGameActivity(activityType, details) {
 window.addEventListener('DOMContentLoaded', function() {
     initUserSystem();
 });
-// 페이지 로드 시 게임 시작
-window.addEventListener('DOMContentLoaded', initGame);

@@ -800,10 +800,9 @@ function showResult(isCorrect) {
         var earnedMoney = gameState.currentDish ? gameState.currentDish.price : 0;
         gameState.money += earnedMoney;
         
-        // localStorage에 저장
-        localStorage.setItem('nanugiyorisa_money', gameState.money.toString());
-        
-        document.getElementById('moneyDisplay').textContent = '💰 ' + gameState.money + '원';
+        // 저장 및 표시
+        saveMoney();
+        updateMoneyDisplay();
         
         var messages = [
             '완벽해요! 🌟',
@@ -1149,8 +1148,8 @@ function initEventListeners() {
     document.getElementById('resetButton').addEventListener('click', function() {
         if (confirm('돈을 초기화하시겠습니까? 모든 매출이 사라집니다.')) {
             gameState.money = 0;
-            localStorage.setItem('nanugiyorisa_money', '0');
-            document.getElementById('moneyDisplay').textContent = '💰 0원';
+            saveMoney();
+            updateMoneyDisplay();
         }
     });
     
@@ -1161,11 +1160,10 @@ function initEventListeners() {
             gameState.currentProblem = 0;
             gameState.currentLevel = 1;
             gameState.money = 0;
-            // localStorage 초기화
-            localStorage.setItem('nanugiyorisa_money', '0');
+            saveMoney();
             // Reshuffle problems for new game
             gameState.problemOrder = shuffleArray(problems.slice());
-            document.getElementById('moneyDisplay').textContent = '💰 0원';
+            updateMoneyDisplay();
             document.getElementById('nextBtn').textContent = '다음 문제';
             loadProblem();
             document.getElementById('resultModal').classList.remove('show');
@@ -1202,11 +1200,43 @@ function initEventListeners() {
 function initGame() {
     console.log('레시피 로드 완료:', recipes.length + '개');
     
+    // localStorage에서 돈 불러오기
+    loadMoney();
+    
     // Shuffle problems to randomize order
     gameState.problemOrder = shuffleArray(problems.slice());
     
     initEventListeners();
     loadProblem();
+    updateMoneyDisplay();
+}
+
+// 돈 저장 함수
+function saveMoney() {
+    try {
+        localStorage.setItem('nanugiyorisa_money', gameState.money.toString());
+        console.log('돈 저장:', gameState.money);
+    } catch (e) {
+        console.error('localStorage 저장 실패:', e);
+    }
+}
+
+// 돈 불러오기 함수
+function loadMoney() {
+    try {
+        var saved = localStorage.getItem('nanugiyorisa_money');
+        if (saved !== null) {
+            gameState.money = parseInt(saved, 10) || 0;
+            console.log('돈 불러오기:', gameState.money);
+        }
+    } catch (e) {
+        console.error('localStorage 불러오기 실패:', e);
+        gameState.money = 0;
+    }
+}
+
+// 돈 표시 업데이트 함수
+function updateMoneyDisplay() {
     document.getElementById('moneyDisplay').textContent = '💰 ' + gameState.money + '원';
 }
 

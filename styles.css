@@ -183,6 +183,33 @@ body {
     border: 3px solid #000000;
 }
 
+/* 초기화 버튼 */
+.reset-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 59, 48, 0.95);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    border: 3px solid #d32f2f;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    transition: all 0.2s ease;
+}
+
+.reset-button:hover {
+    background: rgba(211, 47, 47, 1);
+    transform: scale(1.05);
+}
+
+.reset-button:active {
+    transform: scale(0.95);
+}
+
 /* 메인 게임 영역 */
 .game-area {
     display: grid;

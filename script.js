@@ -2,7 +2,7 @@
 var gameState = {
     currentLevel: 1,
     currentProblem: 0,
-    money: 0,
+    money: parseInt(localStorage.getItem('nanugiyorisa_money') || '0', 10),
     selectedItem: null,
     selectedPieces: [],
     workspaceItems: [],
@@ -800,6 +800,9 @@ function showResult(isCorrect) {
         var earnedMoney = gameState.currentDish ? gameState.currentDish.price : 0;
         gameState.money += earnedMoney;
         
+        // localStorage에 저장
+        localStorage.setItem('nanugiyorisa_money', gameState.money.toString());
+        
         document.getElementById('moneyDisplay').textContent = '💰 ' + gameState.money + '원';
         
         var messages = [
@@ -1142,6 +1145,15 @@ function initEventListeners() {
     // 접시 비우기
     document.getElementById('clearPlateBtn').addEventListener('click', clearPlate);
     
+    // 초기화 버튼
+    document.getElementById('resetButton').addEventListener('click', function() {
+        if (confirm('돈을 초기화하시겠습니까? 모든 매출이 사라집니다.')) {
+            gameState.money = 0;
+            localStorage.setItem('nanugiyorisa_money', '0');
+            document.getElementById('moneyDisplay').textContent = '💰 0원';
+        }
+    });
+    
     // 결과 모달 버튼
     document.getElementById('nextBtn').addEventListener('click', function() {
         if (gameState.currentProblem >= gameState.problemOrder.length - 1) {
@@ -1149,6 +1161,8 @@ function initEventListeners() {
             gameState.currentProblem = 0;
             gameState.currentLevel = 1;
             gameState.money = 0;
+            // localStorage 초기화
+            localStorage.setItem('nanugiyorisa_money', '0');
             // Reshuffle problems for new game
             gameState.problemOrder = shuffleArray(problems.slice());
             document.getElementById('moneyDisplay').textContent = '💰 0원';

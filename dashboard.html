@@ -234,8 +234,7 @@
         </div>
         
         <div class="users-table">
-            <h2>사용자 목록</h2>
-            <button class="refresh-btn" id="refreshBtn">🔄 새로고침</button>
+            <h2>사용자 목록 <span style="color: #28a745; font-size: 14px;">🟢 실시간</span></h2>
             <button class="back-btn" onclick="location.href='index.html'">🏠 게임으로 돌아가기</button>
             <table>
                 <thead>
@@ -259,7 +258,7 @@
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getFirestore, collection, getDocs, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getFirestore, collection, query, orderBy, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
         
         const firebaseConfig = {
             apiKey: "AIzaSyDjHaq4tZvTC9IFxSK_M_yZg4WguyUh_NI",
@@ -294,63 +293,68 @@
             }
         }
         
-        // 대시보드 데이터 로드
-        async function loadDashboardData() {
+        // 실시간 대시보드 데이터 리스너
+        function loadDashboardData() {
             try {
                 const usersRef = collection(db, 'users');
                 const q = query(usersRef, orderBy('money', 'desc'));
-                const querySnapshot = await getDocs(q);
                 
-                const users = [];
-                querySnapshot.forEach((doc) => {
-                    users.push(doc.data());
-                });
-                
-                // 통계 계산
-                const totalUsers = users.length;
-                const totalMoney = users.reduce((sum, user) => sum + (user.money || 0), 0);
-                const avgMoney = totalUsers > 0 ? Math.round(totalMoney / totalUsers) : 0;
-                const maxMoney = users.length > 0 ? users[0].money || 0 : 0;
-                
-                // 통계 표시
-                document.getElementById('totalUsers').textContent = totalUsers;
-                document.getElementById('totalMoney').textContent = totalMoney.toLocaleString() + '원';
-                document.getElementById('avgMoney').textContent = avgMoney.toLocaleString() + '원';
-                document.getElementById('maxMoney').textContent = maxMoney.toLocaleString() + '원';
-                
-                // 테이블 표시
-                const tbody = document.getElementById('usersTableBody');
-                tbody.innerHTML = '';
-                
-                if (users.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">등록된 사용자가 없습니다</td></tr>';
-                    return;
-                }
-                
-                users.forEach((user, index) => {
-                    const row = document.createElement('tr');
-                    const lastPlayed = user.lastPlayed ? new Date(user.lastPlayed).toLocaleString('ko-KR') : '없음';
-                    const totalGames = user.totalGames || 0;
+                // 실시간 리스너 설정
+                onSnapshot(q, (querySnapshot) => {
+                    const users = [];
+                    querySnapshot.forEach((doc) => {
+                        users.push(doc.data());
+                    });
                     
-                    row.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td><strong>${user.username}</strong></td>
-                        <td>${(user.money || 0).toLocaleString()}원</td>
-                        <td>${lastPlayed}</td>
-                        <td>${totalGames}</td>
-                    `;
-                    tbody.appendChild(row);
+                    // 통계 계산
+                    const totalUsers = users.length;
+                    const totalMoney = users.reduce((sum, user) => sum + (user.money || 0), 0);
+                    const avgMoney = totalUsers > 0 ? Math.round(totalMoney / totalUsers) : 0;
+                    const maxMoney = users.length > 0 ? users[0].money || 0 : 0;
+                    
+                    // 통계 표시
+                    document.getElementById('totalUsers').textContent = totalUsers;
+                    document.getElementById('totalMoney').textContent = totalMoney.toLocaleString() + '원';
+                    document.getElementById('avgMoney').textContent = avgMoney.toLocaleString() + '원';
+                    document.getElementById('maxMoney').textContent = maxMoney.toLocaleString() + '원';
+                    
+                    // 테이블 표시
+                    const tbody = document.getElementById('usersTableBody');
+                    tbody.innerHTML = '';
+                    
+                    if (users.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">등록된 사용자가 없습니다</td></tr>';
+                        return;
+                    }
+                    
+                    users.forEach((user, index) => {
+                        const row = document.createElement('tr');
+                        const lastPlayed = user.lastPlayed ? new Date(user.lastPlayed).toLocaleString('ko-KR') : '없음';
+                        const totalGames = user.totalGames || 0;
+                        
+                        row.innerHTML = `
+                            <td>${index + 1}</td>
+                            <td><strong>${user.username}</strong></td>
+                            <td>${(user.money || 0).toLocaleString()}원</td>
+                            <td>${lastPlayed}</td>
+                            <td>${totalGames}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                    
+                    console.log('실시간 데이터 업데이트:', users.length + '명');
+                }, (error) => {
+                    console.error('실시간 데이터 로드 실패:', error);
+                    document.getElementById('usersTableBody').innerHTML = 
+                        '<tr><td colspan="5" style="text-align: center; color: red;">데이터 로드 실패: ' + error.message + '</td></tr>';
                 });
                 
             } catch (error) {
-                console.error('데이터 로드 실패:', error);
+                console.error('리스너 설정 실패:', error);
                 document.getElementById('usersTableBody').innerHTML = 
-                    '<tr><td colspan="5" style="text-align: center; color: red;">데이터 로드 실패: ' + error.message + '</td></tr>';
+                    '<tr><td colspan="5" style="text-align: center; color: red;">리스너 설정 실패: ' + error.message + '</td></tr>';
             }
         }
-        
-        // 새로고침 버튼
-        document.getElementById('refreshBtn').addEventListener('click', loadDashboardData);
     </script>
 </body>
 </html>

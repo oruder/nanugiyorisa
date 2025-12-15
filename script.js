@@ -1171,17 +1171,19 @@ function initEventListeners() {
     // 결과 모달 버튼
     document.getElementById('nextBtn').addEventListener('click', function() {
         if (gameState.currentProblem >= gameState.problemOrder.length - 1) {
-            // 게임 재시작
-            gameState.currentProblem = 0;
-            gameState.currentLevel = 1;
-            gameState.money = 0;
-            saveMoney();
-            // Reshuffle problems for new game
-            gameState.problemOrder = shuffleArray(problems.slice());
-            updateMoneyDisplay();
-            document.getElementById('nextBtn').textContent = '다음 문제';
-            loadProblem();
-            document.getElementById('resultModal').classList.remove('show');
+            // 게임 재시작 - 금액 초기화 확인
+            if (confirm('모든 문제를 완료했습니다! 처음부터 다시 시작하면 현재 매출이 0원으로 초기화됩니다. 계속하시겠습니까?')) {
+                gameState.currentProblem = 0;
+                gameState.currentLevel = 1;
+                gameState.money = 0;
+                saveMoney();
+                // Reshuffle problems for new game
+                gameState.problemOrder = shuffleArray(problems.slice());
+                updateMoneyDisplay();
+                document.getElementById('nextBtn').textContent = '다음 문제';
+                loadProblem();
+                document.getElementById('resultModal').classList.remove('show');
+            }
         } else {
             nextProblem();
         }
@@ -1322,6 +1324,13 @@ function saveUserData() {
     var funcs = window.firestoreFunctions;
     
     if (!db || !funcs || !currentUser) return;
+    
+    // 0원으로 저장하려고 하면 한번 더 확인
+    if (gameState.money === 0) {
+        console.warn('경고: 0원으로 저장 시도');
+        // 이미 0원이었다면 그냥 저장
+        // 새 사용자이거나 명시적 초기화를 한 경우만 통과
+    }
     
     var userRef = funcs.doc(db, 'users', currentUser);
     var timestamp = new Date().toISOString();

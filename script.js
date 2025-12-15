@@ -1162,7 +1162,6 @@ function initEventListeners() {
     // 초기화 버튼
     document.getElementById('resetButton').addEventListener('click', function() {
         if (confirm('돈을 초기화하시겠습니까? 모든 매출이 사라집니다.')) {
-            isExplicitReset = true;
             gameState.money = 0;
             saveMoney();
             updateMoneyDisplay();
@@ -1174,7 +1173,6 @@ function initEventListeners() {
         if (gameState.currentProblem >= gameState.problemOrder.length - 1) {
             // 게임 재시작 - 금액 초기화 확인
             if (confirm('모든 문제를 완료했습니다! 처음부터 다시 시작하면 현재 매출이 0원으로 초기화됩니다. 계속하시겠습니까?')) {
-                isExplicitReset = true;
                 gameState.currentProblem = 0;
                 gameState.currentLevel = 1;
                 gameState.money = 0;

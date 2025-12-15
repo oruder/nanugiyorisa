@@ -7,6 +7,16 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- 사용자 이름 입력 모달 -->
+    <div class="username-modal" id="usernameModal">
+        <div class="username-modal-content">
+            <h2>🎮 나누기 요리사</h2>
+            <p>게임을 시작하려면 이름을 입력하세요</p>
+            <input type="text" id="usernameInput" placeholder="이름 입력" maxlength="20">
+            <button class="btn-start" id="startGameBtn">시작하기</button>
+        </div>
+    </div>
+    
     <div class="game-container">
         <!-- 매출 표시 -->
         <div class="money-display" id="moneyDisplay">💰 0원</div>
@@ -169,6 +179,27 @@
         </div>
     </div>
 
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, increment, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyDjHaq4tZvTC9IFxSK_M_yZg4WguyUh_NI",
+            authDomain: "nanugiyorisa.firebaseapp.com",
+            projectId: "nanugiyorisa",
+            storageBucket: "nanugiyorisa.firebasestorage.app",
+            messagingSenderId: "297540232572",
+            appId: "1:297540232572:web:7eb1d80fec640e34b5b0f9"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        // 전역으로 노출
+        window.firebaseDB = db;
+        window.firestoreFunctions = { doc, getDoc, setDoc, updateDoc, increment, collection, getDocs };
+    </script>
     <script src="script.js"></script>
 </body>
 </html>

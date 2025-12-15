@@ -1,8 +1,11 @@
+// Firebase 및 사용자 관리
+var currentUser = null;
+
 // 게임 상태 관리
 var gameState = {
     currentLevel: 1,
     currentProblem: 0,
-    money: parseInt(localStorage.getItem('nanugiyorisa_money') || '0', 10),
+    money: 0,
     selectedItem: null,
     selectedPieces: [],
     workspaceItems: [],
@@ -1200,9 +1203,6 @@ function initEventListeners() {
 function initGame() {
     console.log('레시피 로드 완료:', recipes.length + '개');
     
-    // localStorage에서 돈 불러오기
-    loadMoney();
-    
     // Shuffle problems to randomize order
     gameState.problemOrder = shuffleArray(problems.slice());
     
@@ -1211,33 +1211,23 @@ function initGame() {
     updateMoneyDisplay();
 }
 
-// 돈 저장 함수
+// 돈 저장 함수 (Firebase)
 function saveMoney() {
-    try {
-        localStorage.setItem('nanugiyorisa_money', gameState.money.toString());
-        console.log('돈 저장:', gameState.money);
-    } catch (e) {
-        console.error('localStorage 저장 실패:', e);
-    }
+    saveUserData();
 }
 
-// 돈 불러오기 함수
+// 돈 불러오기 함수 (Firebase에서 이미 처리)
 function loadMoney() {
-    try {
-        var saved = localStorage.getItem('nanugiyorisa_money');
-        if (saved !== null) {
-            gameState.money = parseInt(saved, 10) || 0;
-            console.log('돈 불러오기:', gameState.money);
-        }
-    } catch (e) {
-        console.error('localStorage 불러오기 실패:', e);
-        gameState.money = 0;
-    }
+    // Firebase loadUserData()에서 처리됨
 }
 
 // 돈 표시 업데이트 함수
 function updateMoneyDisplay() {
-    document.getElementById('moneyDisplay').textContent = '💰 ' + gameState.money + '원';
+    var displayText = '💰 ' + gameState.money + '원';
+    if (currentUser) {
+        displayText += ' (' + currentUser + ')';
+    }
+    document.getElementById('moneyDisplay').textContent = displayText;
 }
 
 // Shuffle array using Fisher-Yates algorithm
@@ -1252,5 +1242,110 @@ function shuffleArray(array) {
     return shuffled;
 }
 
+// Firebase 사용자 관리
+function initUserSystem() {
+    var modal = document.getElementById('usernameModal');
+    var input = document.getElementById('usernameInput');
+    var btn = document.getElementById('startGameBtn');
+    
+    // Enter 키로 시작
+    input.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && input.value.trim()) {
+            startGame();
+        }
+    });
+    
+    btn.addEventListener('click', startGame);
+    
+    function startGame() {
+        var username = input.value.trim();
+        if (!username) {
+            alert('이름을 입력해주세요!');
+            return;
+        }
+        
+        currentUser = username;
+        modal.classList.add('hidden');
+        loadUserData();
+    }
+}
+
+// Firestore에서 사용자 데이터 불러오기
+function loadUserData() {
+    var db = window.firebaseDB;
+    var funcs = window.firestoreFunctions;
+    
+    if (!db || !funcs) {
+        console.error('Firebase가 아직 초기화되지 않았습니다');
+        setTimeout(loadUserData, 500);
+        return;
+    }
+    
+    var userRef = funcs.doc(db, 'users', currentUser);
+    
+    funcs.getDoc(userRef).then(function(docSnap) {
+        if (docSnap.exists()) {
+            var data = docSnap.data();
+            gameState.money = data.money || 0;
+            console.log('사용자 데이터 불러오기:', currentUser, gameState.money);
+        } else {
+            // 새 사용자
+            gameState.money = 0;
+            saveUserData();
+            console.log('새 사용자 생성:', currentUser);
+        }
+        updateMoneyDisplay();
+        initGame();
+    }).catch(function(error) {
+        console.error('데이터 불러오기 실패:', error);
+        gameState.money = 0;
+        updateMoneyDisplay();
+        initGame();
+    });
+}
+
+// Firestore에 사용자 데이터 저장
+function saveUserData() {
+    var db = window.firebaseDB;
+    var funcs = window.firestoreFunctions;
+    
+    if (!db || !funcs || !currentUser) return;
+    
+    var userRef = funcs.doc(db, 'users', currentUser);
+    var timestamp = new Date().toISOString();
+    
+    funcs.setDoc(userRef, {
+        username: currentUser,
+        money: gameState.money,
+        lastPlayed: timestamp,
+        lastUpdated: timestamp
+    }, { merge: true }).then(function() {
+        console.log('데이터 저장 완료:', currentUser, gameState.money);
+    }).catch(function(error) {
+        console.error('데이터 저장 실패:', error);
+    });
+}
+
+// 게임 활동 기록
+function logGameActivity(activityType, details) {
+    var db = window.firebaseDB;
+    var funcs = window.firestoreFunctions;
+    
+    if (!db || !funcs || !currentUser) return;
+    
+    var userRef = funcs.doc(db, 'users', currentUser);
+    
+    funcs.updateDoc(userRef, {
+        lastPlayed: new Date().toISOString(),
+        totalGames: funcs.increment(1)
+    }).catch(function(error) {
+        console.log('활동 로그 실패:', error);
+    });
+}
+
+// 페이지 로드 시 사용자 시스템 시작
+window.addEventListener('DOMContentLoaded', function() {
+    initUserSystem();
+});
 // 페이지 로드 시 게임 시작
 window.addEventListener('DOMContentLoaded', initGame);

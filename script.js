@@ -874,8 +874,8 @@ function nextProblem() {
         gameState.currentLevel = nextLevel;
     }
     
-    document.getElementById('nextBtn').textContent = '처음부터 다시';
-    document.getElementById('retryBtn').style.display = 'none';
+    loadProblem();
+    document.getElementById('resultModal').classList.remove('show');
 }
 
 // 재시도

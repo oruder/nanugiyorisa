@@ -939,10 +939,6 @@ function showDishResult(dish) {
     }
     dishResult.style.display = 'block';
     document.getElementById('plateArea').style.display = 'none';
-    
-    // 버튼 이벤트 리스너 다시 연결
-    document.getElementById('serveBtn').addEventListener('click', checkAnswer);
-    document.getElementById('discardBtn').addEventListener('click', discardDish);
 }
 
 // 레시피 매칭 함수
@@ -1031,8 +1027,9 @@ function cookDish() {
         gameState.plateItems = [];
         updatePlateDisplay();
         
-        // 버튼 다시 활성화
+        // 버튼 다시 활성화 (요리하기는 비활성화, 접시 비우기만 활성화)
         document.getElementById('clearPlateBtn').disabled = false;
+        document.getElementById('cookBtn').disabled = true;
     }, cookingTime);
 }
 
@@ -1151,11 +1148,14 @@ function initEventListeners() {
     // 요리하기 버튼
     document.getElementById('cookBtn').addEventListener('click', cookDish);
     
-    // 서빙 버튼
-    document.getElementById('serveBtn').addEventListener('click', checkAnswer);
-    
-    // 요리 버리기 버튼
-    document.getElementById('discardBtn').addEventListener('click', discardDish);
+    // 서빙 버튼 - dishResult 영역 내부에 동적 생성되므로 이벤트 위임 사용
+    document.getElementById('dishResult').addEventListener('click', function(e) {
+        if (e.target && e.target.id === 'serveBtn') {
+            checkAnswer();
+        } else if (e.target && e.target.id === 'discardBtn') {
+            discardDish();
+        }
+    });
     
     // 통째로 접시에 담기
     document.getElementById('moveWholeToPLateBtn').addEventListener('click', moveWholeToPLate);
@@ -1188,16 +1188,14 @@ function initEventListeners() {
         document.getElementById('hintModal').classList.remove('show');
     });
     
-    // 모달 배경 클릭 시 닫기
-    var modals = document.querySelectorAll('.modal');
-    for (var k = 0; k < modals.length; k++) {
-        (function(modal) {
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    modal.classList.remove('show');
-                }
-            });
-        })(modals[k]);
+    // 모달 배경 클릭 시 닫기 (결과 모달 제외 - 반드시 버튼으로만 닫아야 함)
+    var hintModal = document.getElementById('hintModal');
+    if (hintModal) {
+        hintModal.addEventListener('click', function(e) {
+            if (e.target === hintModal) {
+                hintModal.classList.remove('show');
+            }
+        });
     }
 }
 

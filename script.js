@@ -1176,16 +1176,16 @@ function initEventListeners() {
     });
     
     // 결과 모달 버튼
-    document.getElementById('nextBtn').addEventListener('click', function() {
-        if (gameState.currentProblem >= gameState.problemOrder.length - 1) {
-            // 게임 재시작 - 금액 초기화 확인
-            if (confirm('모든 문제를 완료했습니다! 처음부터 다시 시작하면 현재 매출이 0원으로 초기화됩니다. 계속하시겠습니까?')) {
-                gameState.currentProblem = 0;
-                gameState.currentLevel = 1;
-                gameState.money = 0;
-                saveMoney();
-                // Reshuffle problems for new game
-                gameState.problemOrder = shuffleArray(problems.slnextProblem   document.getElementById('hintModal').classList.remove('show');
+    document.getElementById('nextBtn').addEventListener('click', nextProblem);
+    
+    document.getElementById('retryBtn').addEventListener('click', retryProblem);
+    
+    // 힌트 버튼
+    document.getElementById('hintBtn').addEventListener('click', showHint);
+    
+    // 힌트 닫기
+    document.getElementById('closeHint').addEventListener('click', function() {
+        document.getElementById('hintModal').classList.remove('show');
     });
     
     // 모달 배경 클릭 시 닫기

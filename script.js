@@ -782,6 +782,12 @@ function checkAnswer() {
         return;
     }
     
+    // 서빙 버튼 비활성화 (중복 클릭 방지)
+    var serveBtn = document.getElementById('serveBtn');
+    if (serveBtn) {
+        serveBtn.disabled = true;
+    }
+    
     var problem = gameState.problemOrder[gameState.currentProblem];
     var isCorrect = false;
     
@@ -854,8 +860,12 @@ function nextProblem() {
     gameState.currentProblem++;
     
     if (gameState.currentProblem >= gameState.problemOrder.length) {
-        // 게임 완료
-        showGameComplete();
+        // 게임 완료 - 처음부터 다시 시작 (돈은 유지)
+        gameState.currentProblem = 0;
+        gameState.currentLevel = 1;
+        gameState.problemOrder = shuffleArray(problems.slice());
+        loadProblem();
+        document.getElementById('resultModal').classList.remove('show');
         return;
     }
     
@@ -864,21 +874,6 @@ function nextProblem() {
         gameState.currentLevel = nextLevel;
     }
     
-    loadProblem();
-    document.getElementById('resultModal').classList.remove('show');
-}
-
-// 게임 완료
-function showGameComplete() {
-    var resultContent = document.getElementById('resultContent');
-    resultContent.innerHTML = '<div class="result-content-success">' +
-            '<div class="star-animation">🏆</div>' +
-            '<h2>축하합니다!</h2>' +
-            '<p>모든 문제를 완료했어요!</p>' +
-            '<p>최종 수익: 💰 ' + gameState.money + '원</p>' +
-        '</div>';
-    
-    document.getElementById('nextBtn').style.display = 'inline-block';
     document.getElementById('nextBtn').textContent = '처음부터 다시';
     document.getElementById('retryBtn').style.display = 'none';
 }
@@ -902,6 +897,12 @@ function clearWorkspace() {
     document.getElementById('divideBtn').disabled = true;
 }
 
+    
+    // 서빙 버튼 재활성화
+    var serveBtn = document.getElementById('serveBtn');
+    if (serveBtn) {
+        serveBtn.disabled = false;
+    }
 // 접시 비우기
 function clearPlate() {
     gameState.plateItems = [];
@@ -930,6 +931,12 @@ function showDishResult(dish) {
             '<button id="discardBtn" class="btn btn-secondary">버리기</button>' +
         '</div>';
     
+    
+    // 서빙 버튼 활성화 (새로운 요리이므로)
+    var serveBtn = document.getElementById('serveBtn');
+    if (serveBtn) {
+        serveBtn.disabled = false;
+    }
     dishResult.style.display = 'block';
     document.getElementById('plateArea').style.display = 'none';
     
@@ -1178,25 +1185,7 @@ function initEventListeners() {
                 gameState.money = 0;
                 saveMoney();
                 // Reshuffle problems for new game
-                gameState.problemOrder = shuffleArray(problems.slice());
-                updateMoneyDisplay();
-                document.getElementById('nextBtn').textContent = '다음 문제';
-                loadProblem();
-                document.getElementById('resultModal').classList.remove('show');
-            }
-        } else {
-            nextProblem();
-        }
-    });
-    
-    document.getElementById('retryBtn').addEventListener('click', retryProblem);
-    
-    // 힌트 버튼
-    document.getElementById('hintBtn').addEventListener('click', showHint);
-    
-    // 힌트 닫기
-    document.getElementById('closeHint').addEventListener('click', function() {
-        document.getElementById('hintModal').classList.remove('show');
+                gameState.problemOrder = shuffleArray(problems.slnextProblem   document.getElementById('hintModal').classList.remove('show');
     });
     
     // 모달 배경 클릭 시 닫기
